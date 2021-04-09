@@ -7,9 +7,18 @@ provider:
   environment:
     TELEGRAM_TOKEN: ${file(./serverless.env.yml):TELEGRAM_TOKEN, ''}
 
+layers:
+  tesseract:
+    path: tesseract_layer
+    compatibleRuntimes:
+    - python3.8
+
+
 functions:
   webhook:
     handler: handler.webhook
+    layers:
+      - { Ref: TesseractLambdaLayer }
     events:
       - http: POST /
 

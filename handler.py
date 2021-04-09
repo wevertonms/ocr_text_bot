@@ -23,7 +23,8 @@ CURDIR = Path(__file__).parent
 IMAGES_DIR = CURDIR / Path("photos")
 # IMAGES_DIR.mkdir(exist_ok=True)
 
-DEFAULT_MESSAGE = "Sorry, human! I'm under maintenance. Try again later..."
+# DEFAULT_MESSAGE = "Sorry, human! I'm under maintenance. Try again later..."
+DEFAULT_MESSAGE = "Please, send me an image with text in it..."
 
 
 def configure_telegram():
@@ -61,7 +62,7 @@ def help_command(update, _):
 
 
 def photo_callback(update, _):
-    # update.message.reply_text("Hold tight while I process the image...")
+    update.message.reply_text("Hold tight while I process the image...")
     text = DEFAULT_MESSAGE
     photo = update.message.photo[-1].get_file()
     photo_name = photo.file_path.split("/")[-1]

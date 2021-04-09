@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.png" />
+  <img src="logo.png" width="100"/>
 </p>
 
 # Text from image (OCR) [@ocr_text_bot](https://t.me/ocr_text_bot)

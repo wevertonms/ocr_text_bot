@@ -1,16 +1,10 @@
-<!--
-title: TODO
-description: This example demonstrates how to setup an echo Telegram Bot using the Serverless Framework.
-layout: Doc
-framework: v1
-platform: AWS
-language: Python
-authorLink: 'https://github.com/jonatasbaldin'
-authorName: 'Jonatas Baldin'
-authorAvatar: 'https://avatars3.githubusercontent.com/u/8570364?v=4&s=140'
--->
-# Serverless Telegram Bot
-This example demonstrates how to setup an echo Telegram Bot using the Serverless Framework ⚡🤖
+<p align="center">
+  <img src="logo.png" />
+</p>
+
+# Text from image (OCR) [@ocr_text_bot](https://t.me/ocr_text_bot)
+
+A simple bot to extract text from images.
 
 ## Usage
 
@@ -42,3 +36,10 @@ $ curl -X POST https://<your_url>.amazonaws.com/dev/set_webhook
 ```
 
 Now, just start a conversation with the bot :)
+
+## Acknowledgement
+
+- [Serveless aws-python-telegram-bot example](https://github.com/serverless/examples/tree/master/aws-python-telegram-bot)
+- [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot)
+- [pytesseract](https://github.com/madmaze/pytesseract)
+- [Tesseract](https://github.com/tesseract-ocr/tesseract)

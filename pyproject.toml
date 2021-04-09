@@ -7,7 +7,6 @@ authors = ["Weverton Marques <wevertonms@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.8.2"
 python-telegram-bot = "^12.8"
-# opencv-python = "^4.4.0"
 pytesseract = "^0.3.5"
 
 [tool.poetry.dev-dependencies]

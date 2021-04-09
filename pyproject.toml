@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "ocr_text_bot"
+version = "0.1.0"
+description = "A bot that extract text from images using the Tesseract OCR."
+authors = ["Weverton Marques <wevertonms@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8.2"
+python-telegram-bot = "^12.8"
+# opencv-python = "^4.4.0"
+pytesseract = "^0.3.5"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.0.1"
+prospector = "^1.3.0"
+black = {version = "^20.8b1", allow-prereleases = true}
+rope = "^0.17.0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

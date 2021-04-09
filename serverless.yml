@@ -2,6 +2,7 @@ service: aws-python-telegram-bot
 
 provider:
   name: aws
+  lambdaHashingVersion: "20201221"
   runtime: python3.8
   profile: default
   environment:
@@ -29,3 +30,8 @@ functions:
 
 plugins:
   - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    useDownloadCache: true
+    useStaticCache: true

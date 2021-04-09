@@ -55,9 +55,8 @@ def start_command(update, _):
 
 def help_command(update, _):
     text = """Available commands:
-- /start to show start message.
-- /help to show this list of commands.
-"""
+    - /start to show start message.
+    - /help to show this list of commands."""
     update.message.reply_text(text)
 
 

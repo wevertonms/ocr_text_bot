@@ -1,17 +1,17 @@
-import tempfile
 import json
-import logging
 import os
+import tempfile
 from pathlib import Path
 
-import telegram
-from telegram.ext import Dispatcher, CommandHandler, MessageHandler, Filters
+import pytesseract
 
-# Logging is cool!
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-)
-logger = logging.getLogger(__name__)
+import telegram
+from telegram.ext import CommandHandler, Dispatcher, Filters, MessageHandler
+
+try:
+    from PIL import Image
+except ImportError:
+    import Image
 
 OK_RESPONSE = {
     "statusCode": 200,
@@ -35,7 +35,7 @@ def configure_telegram():
 
     TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
     if not TELEGRAM_TOKEN:
-        logger.error("The TELEGRAM_TOKEN must be set")
+        print("The TELEGRAM_TOKEN must be set")
         raise NotImplementedError
 
     return telegram.Bot(TELEGRAM_TOKEN)
@@ -62,17 +62,19 @@ def help_command(update, _):
 
 def photo_callback(update, _):
     # update.message.reply_text("Hold tight while I process the image...")
+    text = DEFAULT_MESSAGE
     photo = update.message.photo[-1].get_file()
     photo_name = photo.file_path.split("/")[-1]
     username = update.effective_user.name
-    with tempfile.NamedTemporary(prefix=photo_name) as f:
-        file_path = f.name  # str((IMAGES_DIR / f"{username}_{photo_name}").absolute())
+    with tempfile.NamedTemporaryFile(prefix=photo_name) as f:
+        file_path = f.name
+        # file_path = str((IMAGES_DIR / f"{username}_{photo_name}").absolute())
         print("Downloading file '%s' from %s" % (f, username))
         photo.download(custom_path=file_path)
-    # image = cv2.imread(file_path)
-    # custom_config = "--oem 3 --psm 3"
-    # text = pytesseract.image_to_string(image, config=custom_config)
-    text = DEFAULT_MESSAGE
+        image = Image.open(file_path)
+    custom_config = "--oem 3 --psm 3"
+    text = pytesseract.image_to_string(image, config=custom_config)
+    # text = DEFAULT_MESSAGE
     print("Extracted '%s'" % text)
     update.message.reply_text(text)
 
@@ -81,32 +83,24 @@ def webhook(event, _):
     """
     Runs the Telegram webhook.
     """
-
-    bot = configure_telegram()
     print("Event: %s" % event)
-
     if event.get("httpMethod") == "POST" and event.get("body"):
-        print("Message received")
+        bot = configure_telegram()
         update = telegram.Update.de_json(json.loads(event.get("body")), bot)
-        print("User: %s" % update.effective_user.name)
-
-        dispatcher = Dispatcher(bot=bot, update_queue=None, use_context=True)
-        dispatcher.add_handler(CommandHandler("start", start_command))
-        dispatcher.add_handler(CommandHandler("help", help_command))
-        dispatcher.add_handler(MessageHandler(Filters.text, default_message))
-        dispatcher.add_handler(MessageHandler(Filters.photo, photo_callback))
-        dispatcher.process_update(update)
-
-        # chat_id = update.message.chat.id
-        # text = update.message.text
-        # if text == "/start":
-        # text = "Sorry, human! I'm under maintenance. Try again in later..."
-        # bot.sendMessage(chat_id=chat_id, text=text)
+        main(update, bot)
         print("Message sent")
-
         return OK_RESPONSE
-
     return ERROR_RESPONSE
+
+
+def main(update, bot):
+    print("User: %s" % update.effective_user.name)
+    dispatcher = Dispatcher(bot=bot, update_queue=None, use_context=True)
+    dispatcher.add_handler(CommandHandler("start", start_command))
+    dispatcher.add_handler(CommandHandler("help", help_command))
+    dispatcher.add_handler(MessageHandler(Filters.photo, photo_callback))
+    dispatcher.add_handler(MessageHandler(Filters.text, default_message))
+    dispatcher.process_update(update)
 
 
 def set_webhook(event, _):

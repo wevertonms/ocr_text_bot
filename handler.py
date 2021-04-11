@@ -76,7 +76,11 @@ def photo_callback(update, _):
     text = pytesseract.image_to_string(image, config=custom_config)
     # text = DEFAULT_MESSAGE
     print("Extracted '%s'" % text)
-    update.message.reply_text(text)
+    if text:
+        update.message.reply_text("This is what I've got:")
+        update.message.reply_text(text)
+    else:
+        update.message.reply_text("Sorry, I couldn't find any text :(")
 
 
 def webhook(event, _):

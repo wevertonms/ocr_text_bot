@@ -69,14 +69,14 @@ def photo_callback(update, _):
     with tempfile.NamedTemporaryFile(prefix=photo_name) as f:
         file_path = f.name
         # file_path = str((IMAGES_DIR / f"{username}_{photo_name}").absolute())
-        print("Downloading file '%s' from %s" % (f, username))
+        print("Downloading file '%s' from %s" % (photo_name, username))
         photo.download(custom_path=file_path)
         image = Image.open(file_path)
     custom_config = "--oem 3 --psm 3"
     text = pytesseract.image_to_string(image, config=custom_config)
     # text = DEFAULT_MESSAGE
-    print("Extracted '%s'" % text)
-    if text:
+    print("Extracted %d characters: '%s'" % (len(text), text))
+    if len(text) > 1:
         update.message.reply_text("This is what I've got:")
         update.message.reply_text(text)
     else:

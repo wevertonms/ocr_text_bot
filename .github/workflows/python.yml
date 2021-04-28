@@ -31,8 +31,9 @@ jobs:
       with:
         path: ~/.cache/pypoetry/virtualenvs
         key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
-    - run: poetry --version
+    - run: |
+        poetry --version
+        poetry install
     - name: Lint with prospector
       run: |
-        poetry install --dev
-        poetry run prospector     
+        poetry run prospector

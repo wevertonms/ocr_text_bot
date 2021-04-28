@@ -34,4 +34,5 @@ jobs:
     - run: poetry --version
     - name: Lint with prospector
       run: |
+        poetry install --dev
         poetry run prospector     

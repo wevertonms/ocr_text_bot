@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
+        "getenv",
         "pytesseract",
         "tesseract"
     ],
@@ -9,5 +10,9 @@
     "python.testing.promptToConfigure": false,
     "python.testing.pytestEnabled": false,
     "python.testing.unittestEnabled": false,
-    "python.testing.nosetestsEnabled": false
+    "python.testing.nosetestsEnabled": false,
+    "python.linting.banditEnabled": false,
+    "python.linting.prospectorEnabled": true,
+    "python.linting.enabled": true,
+    "python.pythonPath": "/home/weverton/.cache/pypoetry/virtualenvs/ocr-text-bot-E5AmbzeJ-py3.8/bin/python"
 }

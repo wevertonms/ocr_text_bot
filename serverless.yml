@@ -4,16 +4,17 @@ provider:
   name: aws
   lambdaHashingVersion: "20201221"
   runtime: python3.8
-  profile: default
+  profile: wevertonms
   environment:
     TELEGRAM_TOKEN: ${file(./serverless.env.yml):TELEGRAM_TOKEN, ''}
+  timeout: ${file(./serverless.env.yml):TIMEOUT, 10}
+  memorySize: 150
 
 layers:
   tesseract:
     path: tesseract_layer
     compatibleRuntimes:
-    - python3.8
-
+      - python3.8
 
 functions:
   webhook:

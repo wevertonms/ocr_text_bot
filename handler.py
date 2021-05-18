@@ -1,10 +1,10 @@
 import json
 import os
 import tempfile
+from multiprocessing import Process
 from pathlib import Path
 
 import pytesseract
-
 import telegram
 from telegram.ext import CommandHandler, Dispatcher, Filters, MessageHandler
 
@@ -62,20 +62,25 @@ def help_command(update, _):
 
 def photo_callback(update, _):
     update.message.reply_text("Hold tight while I process the image...")
-    text = DEFAULT_MESSAGE
     photo = update.message.photo[-1].get_file()
     photo_name = photo.file_path.split("/")[-1]
     username = update.effective_user.name
     with tempfile.NamedTemporaryFile(prefix=photo_name) as f:
         file_path = f.name
-        # file_path = str((IMAGES_DIR / f"{username}_{photo_name}").absolute())
         print("Downloading file '%s' from %s" % (photo_name, username))
         photo.download(custom_path=file_path)
         image = Image.open(file_path)
+    p = Process(target=lambda: process_ocr(update, image))
+    p.start()
+    p.join(timeout=int(os.getenv("TIMEOUT", "10")) - 1)
+    p.terminate()
+    if p.exitcode is None:
+        update.message.reply_text("Sorry, I've reached my limit of time :/")
+
+
+def process_ocr(update, image):
     custom_config = "--oem 3 --psm 3"
     text = pytesseract.image_to_string(image, config=custom_config)
-    # text = DEFAULT_MESSAGE
-    print("Extracted %d characters: '%s'" % (len(text), text))
     if len(text) > 1:
         update.message.reply_text("This is what I've got:")
         update.message.reply_text(text)
